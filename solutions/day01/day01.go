@@ -51,14 +51,12 @@ func SolvePart1(filename string) (int, error) {
 	c := 0
 
 	for i < size {
-
 		abs_diff := math.Abs(float64(input[0][i] - input[1][i]))
 
 		c += int(abs_diff)
 		i += 1
 	}
 
-	// Implement your solution here
 	return c, nil
 }
 
@@ -74,6 +72,5 @@ func SolvePart2(filename string) (int, error) {
 		c += leftVal * rightMap[leftVal]
 	}
 
-	// Implement your solution here
 	return c, nil
 }
