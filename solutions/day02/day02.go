@@ -4,15 +4,12 @@ import (
 	"bufio"
 	"math"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
 
 func readInput(filename string) ([][]int, error) {
-	inputPath := filepath.Join("inputs", filename)
-
-	file, _ := os.Open(inputPath)
+	file, _ := os.Open(filename)
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
@@ -35,7 +32,7 @@ func readInput(filename string) ([][]int, error) {
 	return data, nil
 }
 
-func SolvePart1(filename string) (int, error) {
+func SolvePart1(filename string) int {
 	input, _ := readInput(filename)
 
 	nr_safe_reports := 0
@@ -48,10 +45,10 @@ func SolvePart1(filename string) (int, error) {
 		}
 	}
 
-	return nr_safe_reports, nil
+	return nr_safe_reports
 }
 
-func SolvePart2(filename string) (int, error) {
+func SolvePart2(filename string) int {
 	input, _ := readInput(filename)
 
 	nr_safe_reports := 0
@@ -77,7 +74,7 @@ func SolvePart2(filename string) (int, error) {
 		}
 	}
 
-	return nr_safe_reports, nil
+	return nr_safe_reports
 }
 
 func removeElementAtIndex(slice []int, index int) []int {

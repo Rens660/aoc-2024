@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"math"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -12,9 +11,7 @@ import (
 )
 
 func readInput(filename string, pt1 bool) ([][]int, int, error) {
-	inputPath := filepath.Join("inputs", filename)
-
-	file, _ := os.Open(inputPath)
+	file, _ := os.Open(filename)
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
@@ -44,7 +41,7 @@ func readInput(filename string, pt1 bool) ([][]int, int, error) {
 	return [][]int{left, right}, size, nil
 }
 
-func SolvePart1(filename string) (int, error) {
+func SolvePart1(filename string) int {
 	input, size, _ := readInput(filename, true)
 
 	i := 0
@@ -57,10 +54,10 @@ func SolvePart1(filename string) (int, error) {
 		i += 1
 	}
 
-	return c, nil
+	return c
 }
 
-func SolvePart2(filename string) (int, error) {
+func SolvePart2(filename string) int {
 	input, _, _ := readInput(filename, false)
 
 	left, right := input[0], input[1]
@@ -72,5 +69,5 @@ func SolvePart2(filename string) (int, error) {
 		c += leftVal * rightMap[leftVal]
 	}
 
-	return c, nil
+	return c
 }
