@@ -12,12 +12,12 @@ import (
 func main() {
 	fmt.Println("Advent of Code 2024")
 
-	// part1Result, err := day03.SolvePart1("day03_test.txt")
-	// if err != nil {
-	// 	log.Fatalf("Day03|pt1 error: %v", err)
-	// }
-	//
-	// fmt.Printf("Day03|pt1: %v\n", part1Result)
+	part1Result, err := day03.SolvePart1("day03.txt")
+	if err != nil {
+		log.Fatalf("Day03|pt1 error: %v", err)
+	}
+
+	fmt.Printf("Day03|pt1: %v\n", part1Result)
 
 	part2Result, err := day03.SolvePart2("day03.txt")
 	if err != nil {
