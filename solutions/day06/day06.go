@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -59,6 +60,24 @@ func makePath(room [][]string, guard *Guard) []Coordinate {
 	return path
 }
 
+func findLoop(room [][]string, wg *sync.WaitGroup, guard *Guard, messages chan bool) {
+	defer wg.Done()
+
+	for {
+		err := guard.move(room)
+		if err != nil {
+			messages <- false
+			break
+		}
+
+		if guard.InLoop {
+			messages <- true
+			break
+		}
+
+	}
+}
+
 func SolvePart1(filename string) int {
 	room, _ := readInput(filename)
 
@@ -87,31 +106,53 @@ func SolvePart2(filename string) int {
 		InLoop:     false,
 	}
 
+	messages := make(chan bool)
+	var wg sync.WaitGroup
+
 	path := makePath(room, &guard)
 
 	nrLoopIntroducingObstacles := 0
 
 	for _, node := range path[1:] {
-		guard = Guard{
+		newRoom := deepCopy(room)
+		newRoom[node.x][node.y] = "#"
+
+		guard := Guard{
 			Heading:    headingMapper[1],
 			Coordinate: coordinate,
 			Blockades:  map[Coordinate]string{},
 			InLoop:     false,
 		}
 
-		room[node.x][node.y] = "#"
+		wg.Add(1)
+		go findLoop(newRoom, &wg, &guard, messages)
 
-		makePath(room, &guard)
-		if guard.InLoop {
+	}
+
+	go func() {
+		wg.Wait()
+		close(messages)
+	}()
+
+	for b := range messages {
+		if b {
 			nrLoopIntroducingObstacles += 1
 		}
-
-		room[node.x][node.y] = "."
 	}
 
 	t := time.Now()
 	elapsed := t.Sub(start).Seconds()
+
 	fmt.Printf("Time elapsed: %f\n", elapsed)
 
 	return nrLoopIntroducingObstacles
+}
+
+func deepCopy(src [][]string) [][]string {
+	dp := make([][]string, len(src))
+	for i := range src {
+		dp[i] = make([]string, len(src[i]))
+		copy(dp[i], src[i])
+	}
+	return dp
 }
