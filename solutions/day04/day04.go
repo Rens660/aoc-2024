@@ -24,6 +24,11 @@ func printMatrix(matrix [][]string) {
 	}
 }
 
+type XY struct {
+	x int
+	y int
+}
+
 func readInput(filename string) ([][]string, error) {
 	file, _ := os.Open(filename)
 	defer file.Close()
@@ -129,9 +134,4 @@ func SolvePart2(filename string) int {
 	}
 
 	return c
-}
-
-type XY struct {
-	x int
-	y int
 }

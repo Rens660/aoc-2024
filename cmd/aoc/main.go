@@ -56,7 +56,7 @@ func main() {
   --------------------------------------
   `)
 
-	aoc := AOC{day: 5, part: 1, test: true}
+	aoc := AOC{day: 5, part: 0, test: false}
 
 	pt1, pt2 := aoc.solve()
 

@@ -2,17 +2,20 @@ package day05
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
+
+	"gonum.org/v1/gonum/stat/combin"
 )
 
-func readInput(filename string) (map[int][]int, [][]int) {
+const K = 2
+
+func readInput(filename string) (map[int]map[int]bool, [][]int) {
 	file, _ := os.Open(filename)
 	defer file.Close()
 
-	rules := map[int][]int{}
+	rules := map[int]map[int]bool{}
 	updates := [][]int{}
 
 	scanner := bufio.NewScanner(file)
@@ -25,7 +28,6 @@ func readInput(filename string) (map[int][]int, [][]int) {
 			ruleMode = false
 			continue
 		}
-		fmt.Println(row)
 
 		if ruleMode {
 			rule := strings.Split(row, "|")
@@ -33,7 +35,11 @@ func readInput(filename string) (map[int][]int, [][]int) {
 			key, _ := strconv.Atoi(rule[0])
 			value, _ := strconv.Atoi(rule[1])
 
-			rules[key] = append(rules[key], value)
+			if rules[key] == nil {
+				rules[key] = map[int]bool{value: true}
+			} else {
+				rules[key][value] = true
+			}
 
 		} else {
 			rawPage := strings.Split(row, ",")
@@ -57,13 +63,68 @@ func readInput(filename string) (map[int][]int, [][]int) {
 func SolvePart1(filename string) int {
 	rules, updates := readInput(filename)
 
-	fmt.Println(rules)
-	fmt.Println(updates)
+	c := 0
+	for _, update := range updates {
+		legalUpdate := true
 
-	return 0
+		N := len(update)
+
+		combis := combin.Combinations(N, K)
+		for _, combi := range combis {
+			a, b := update[combi[1]], update[combi[0]]
+			if rules[a][b] {
+				legalUpdate = false
+				break
+			}
+		}
+
+		if legalUpdate {
+			middleIdx := N / 2
+			c += update[middleIdx]
+		}
+
+	}
+
+	return c
 }
 
 func SolvePart2(filename string) int {
-	// data, _ := readInput(filename)
-	return 0
+	rules, updates := readInput(filename)
+
+	c := 0
+	for _, update := range updates {
+		illegalUpdate := false
+
+		N := len(update)
+
+		combis := combin.Combinations(N, K)
+
+		k := 0
+		for k < len(combis) {
+			for _, combi := range combis {
+				a, b := update[combi[1]], update[combi[0]]
+				if rules[a][b] {
+					if !illegalUpdate {
+						illegalUpdate = true
+					}
+
+					update[combi[0]] = a
+					update[combi[1]] = b
+
+					k = 0
+
+				} else {
+					k += 1
+				}
+			}
+		}
+
+		if illegalUpdate {
+			middleIdx := N / 2
+			c += update[middleIdx]
+		}
+
+	}
+
+	return c
 }
