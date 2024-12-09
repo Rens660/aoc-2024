@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	solver "github.com/Rens660/aoc-2024/solutions/day05"
+	solver "github.com/Rens660/aoc-2024/solutions/day08"
 )
 
 type AOC struct {
@@ -56,7 +56,7 @@ func main() {
   --------------------------------------
   `)
 
-	aoc := AOC{day: 5, part: 0, test: false}
+	aoc := AOC{day: 8, part: 2, test: false}
 
 	pt1, pt2 := aoc.solve()
 
