@@ -137,11 +137,9 @@ func SolvePart2(filename string) int {
 		}
 
 		fileIdStr := strconv.Itoa(fileId)
-
 		for _, p := range nextDots {
 			disk[p] = fileIdStr
 		}
-
 		for _, q := range indices {
 			disk[q] = "."
 		}
