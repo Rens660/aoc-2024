@@ -36,25 +36,31 @@ func readInput(filename string) map[int][][]int {
 	return m
 }
 
-func possibleTestValue(testValue, acc, k int, nmbrs []int) bool {
+func possibleTestValue(testValue, acc, k int, nmbrs []int, addConcat bool) bool {
 	if k == len(nmbrs)-1 {
 		return acc == testValue
 	}
 
-	add := possibleTestValue(testValue, acc+nmbrs[k+1], k+1, nmbrs)
-	product := possibleTestValue(testValue, acc*nmbrs[k+1], k+1, nmbrs)
+	add := possibleTestValue(testValue, acc+nmbrs[k+1], k+1, nmbrs, addConcat)
+	product := possibleTestValue(testValue, acc*nmbrs[k+1], k+1, nmbrs, addConcat)
+	cnct := false
+	if addConcat {
+		joined := fmt.Sprintf("%d%d", acc, nmbrs[k+1])
+		joinedInt, _ := strconv.Atoi(joined)
 
-	return add || product
+		cnct = possibleTestValue(testValue, joinedInt, k+1, nmbrs, addConcat)
+	}
+
+	return add || product || cnct
 }
 
 func SolvePart1(filename string) int {
 	input := readInput(filename)
-	fmt.Println(len(input))
 
 	var c int = 0
 	for tv, nmbrsL := range input {
 		for _, nmbrs := range nmbrsL {
-			if possibleTestValue(tv, nmbrs[0], 0, nmbrs) {
+			if possibleTestValue(tv, nmbrs[0], 0, nmbrs, false) {
 				c += tv
 			}
 		}
@@ -64,8 +70,16 @@ func SolvePart1(filename string) int {
 }
 
 func SolvePart2(filename string) int {
-	readInput(filename)
+	input := readInput(filename)
 
-	c := 0
+	var c int = 0
+	for tv, nmbrsL := range input {
+		for _, nmbrs := range nmbrsL {
+			if possibleTestValue(tv, nmbrs[0], 0, nmbrs, true) {
+				c += tv
+			}
+		}
+	}
+
 	return c
 }
